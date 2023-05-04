@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auction Website</title>
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            background-color: #4caf50;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            display: inline;
+            margin-right: 1rem;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+        }
+        nav ul li a:hover {
+            color: #333;
+        }
+        section {
+            margin: 2rem;
+        }
+		.product img {
+  			width: 300px;
+ 			height: 300px;
+  			object-fit: cover;
+		}
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .products-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+.product {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.product h3 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+        /* Add New Product modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Auction Website</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#" id="addProductBtn">Add New Product</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+        </ul>
+        <ul>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">Sign Up</a></li>
+        </ul>
+    </nav>
+    <section>
+        <!-- Add New Product modal -->
+        <div id="addProductModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Add New Product</h2>
+                <form id="addProductForm" action="/api/products" method="POST" enctype="multipart/form-data">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="productName" required>
+                    <br>
+                    <label for="productDescription">Product Description:</label>
+                    <textarea id="productDescription" name="productDescription" required></textarea>
+                    <br>
+                    <label for="productImage">Product Image:</label>
+                    <input type="file" id="productImage" name="productImage" accept="image/*" required>
+                    <br>
+                    <label for="startingBid">Starting Bid:</label>
+                    <input type="number" id="startingBid" name="startingBid" step="0.01" min="0" required>
+                    <br>
+                    <label for="auctionEndTime">Auction End Time:</label>
+                    <input type="datetime-local" id="auctionEndTime" name="auctionEndTime" required>
+                    <br>
+                    <input type="submit" value="Create Auction">
+                </form>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <p>© 2023 Auction Website. All rights reserved.</p>
+    </footer>
+    <script>
+        const addProductBtn = document.getElementById("addProductBtn");
+        const addProductModal = document.getElementById("addProductModal");
+        const closeModal = document.getElementsByClassName("close")[0];
+
+        addProductBtn.onclick = function () {
+            addProductModal.style.display = "block";
+        };
+
+        closeModal.onclick = function () {
+            addProductModal.style.display = "none";
+        };
+
+        function getTimeLeft(endTime) {
+            const now = new Date();
+            const endDate = new Date(endTime);
+            const timeLeftMs = endDate - now;
+            const daysLeft = Math.floor(timeLeftMs / (1000 * 60 * 60 * 24));
+            const hoursLeft = Math.floor((timeLeftMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
+            const secondsLeft = Math.floor((timeLeftMs % (1000 * 60)) / 1000);
+            return `${daysLeft}d ${hoursLeft}h ${minutesLeft}m ${secondsLeft}s`;
+        }
+
+        window.onclick = function (event) {
+            if (event.target == addProductModal) {
+                addProductModal.style.display = "none";
+            }
+        };
+
+        async function handleBid(event, productId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const response = await fetch(`/api/products/${productId}/bid`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                });
+
+                if (response.status === 200) {
+                alert('Bid placed successfully!');
+                location.reload(); // Refresh the page to display the updated product
+                } else {
+                alert('Error placing bid.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+            }
+
+
+
+
+
+        async function addProduct(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById("addProductForm"));
+            const response = await fetch('/api/products', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.status === 201) {
+                alert("Product created!");
+                addProductModal.style.display = "none";
+                location.reload(); // Refresh the page to display the new product
+            } else {
+                alert("Error creating product.");
+            }
+        }
+
+        document.getElementById("addProductForm").addEventListener("submit", addProduct);
+
+        function generateProductCard(product) {
+            const base64Image = btoa(String.fromCharCode.apply(null, product.image.data.data));
+            const imageUrl = `data:${product.image.contentType};base64,${base64Image}`;
+
+            return `
+                <div class="product">
+                    <img src="${imageUrl}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>${product.description}</p>
+                    <p>Starting Bid: $${product.startingBid.toFixed(2)}</p>
+                    <p>Current Bid: $${product.currentBid.toFixed(2)}</p>
+                    <p>Time Left: ${getTimeLeft(product.endTime)}</p>
+                    <form class="bid-form" data-product-id="${product._id}" onsubmit="handleBid(event, '${product._id}')">
+                        <label for="bidAmount">Bid Amount:</label>
+                        <input type="number" name="bidAmount" min="${(product.currentBid + 1).toFixed(2)}" step="0.01" required>
+                        <input type="submit" value="Place Bid">
+                    </form>
+                </div>
+            `;
+        }
+
+        async function loadProducts() {
+            const response = await fetch('/api/products');
+            const products = await response.json();
+            const productsContainer = document.createElement('div');
+            productsContainer.className = 'products-container';
+
+            for (const product of products) {
+                const productCard = document.createElement('div');
+                productCard.innerHTML = generateProductCard(product);
+                productsContainer.appendChild(productCard);
+            }
+
+            document.querySelector('section').appendChild(productsContainer);
+        }
+
+        loadProducts();
+    </script>
+</body>
+</html>

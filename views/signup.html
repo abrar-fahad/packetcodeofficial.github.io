@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Signup Page</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+		h1 {
+			text-align: center;
+			margin-top: 50px;
+		}
+		form {
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+			width: 400px;
+			margin: 0 auto;
+			margin-top: 50px;
+			padding: 20px;
+		}
+		label {
+			display: block;
+			margin-top: 20px;
+		}
+		input[type="text"],
+		input[type="email"],
+		input[type="password"] {
+			padding: 10px;
+			border-radius: 5px;
+			border: none;
+			border: 1px solid #ccc;
+			width: 100%;
+			box-sizing: border-box;
+			margin-top: 5px;
+			margin-bottom: 10px;
+			font-size: 16px;
+		}
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			padding: 10px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			width: 100%;
+		}
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+		.login-link {
+			text-align: center;
+			margin-top: 20px;
+			font-size: 14px;
+		}
+		.login-link a {
+			color: #4CAF50;
+			text-decoration: none;
+		}
+		.error-message {
+			color: red;
+			font-size: 14px;
+			margin-top: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Signup Page</h1>
+	<form action="/register" method="POST">
+		<label for="name">Name:</label>
+		<input type="text" id="name" name="name" required>
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" required>
+		<label for="email">Email:</label>
+		<input type="email" id="email" name="email" required>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required>
+		<label for="password-verify">Verify Password:</label>
+		<input type="password" id="password-verify" name="password-verify" required>
+		<input type="submit" value="Sign Up">
+		<div class="login-link">Already a member? <a href="/" class="btn btn-secondary">Login</a></div>
+	</form>
+	<div class="error-message"> </div>
+</body>
+</html>

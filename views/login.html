@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login Page</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #f2f2f2;
+		}
+		h1 {
+			text-align: center;
+			margin-top: 50px;
+		}
+		form {
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+			width: 400px;
+			margin: 0 auto;
+			margin-top: 50px;
+			padding: 20px;
+		}
+		label {
+			display: block;
+			margin-top: 20px;
+		}
+		input[type="text"],
+		input[type="password"] {
+			padding: 10px;
+			border-radius: 5px;
+			border: none;
+			border: 1px solid #ccc;
+			width: 100%;
+			box-sizing: border-box;
+			margin-top: 5px;
+			margin-bottom: 10px;
+			font-size: 16px;
+		}
+		input[type="submit"] {
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			padding: 10px;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+			width: 100%;
+		}
+		input[type="submit"]:hover {
+			background-color: #3e8e41;
+		}
+		.signup-link {
+			text-align: center;
+			margin-top: 20px;
+			font-size: 14px;
+		}
+		.signup-link a {
+			color: #4CAF50;
+			text-decoration: none;
+		}
+		.remember-me {
+			margin-top: 10px;
+			margin-bottom: 10px;
+		}
+		.remember-me label {
+			font-size: 14px;
+			display: inline-block;
+			margin-left: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Website Login</h1>
+	<form action="/login" method="POST">
+		<label for="username">Username:</label>
+		<input type="text" id="username" name="username" required>
+		<label for="password">Password:</label>
+		<input type="password" id="password" name="password" required>
+		<div class="remember-me">
+			<input type="checkbox" id="remember-me" name="remember-me">
+			<label for="remember-me">Remember me</label>
+		</div>
+		<input type="submit" value="Login">
+		<div class="signup-link">Not a member yet? <a href="/signup" class="btn btn-secondary">Sign up</a></div>
+	</form>
+</body>
+</html>
